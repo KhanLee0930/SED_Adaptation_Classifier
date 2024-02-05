@@ -1,0 +1,390 @@
+ 2023-10-01 21:14:39,838 - INFO - Exp name: disjoint | Using GPU
+ 2023-10-01 21:14:39,838 - INFO - {'data_root': './collection', 'exp_name': 'disjoint', 'workspace': 'workspace', 'batch_size': 128, 'epoch': 100, 'lr': 0.001, 'model_name': 'BC-ResNet', 'load_from_ckpt': None, 'dataset': 'ESC-50', 'mode': 'finetune', 'mem_manage': 'uncertainty', 'num_pretrain_class': None, 'n_tasks': 1, 'n_cls_a_task': 50, 'n_init_cls': 50, 'rnd_seed': 5, 'memory_size': 10000, 'uncert_metric': 'noisytune', 'metric_k': 6, 'noise_lambda': 0.2, 'debug': False}
+ 2023-10-01 21:14:40,115 - INFO - [1] Select a CIL method (finetune)
+ 2023-10-01 21:14:40,116 - INFO - Select uncertainty measure approach (noisytune)
+ 2023-10-01 21:14:41,354 - INFO - CIL Scenario: finetune
+ 2023-10-01 21:14:41,354 - INFO - [2] Incrementally training 1 tasks
+ 2023-10-01 21:14:41,355 - INFO - Audio frontend param:
+{'sample_rate': 44100, 'window_size': 1024, 'hop_size': 320, 'mel_bins': 64, 'fmin': 50, 'fmax': 14000}
+
+ 2023-10-01 21:14:41,356 - INFO - Model:
+BCResNet_Mod(
+  (conv1): Conv2d(1, 80, kernel_size=(5, 5), stride=(2, 2), padding=(2, 2))
+  (block1_1): TransitionBlock(
+    (freq_dw_conv): Conv2d(40, 40, kernel_size=(3, 1), stride=(1, 1), padding=(1, 0), groups=40, bias=False)
+    (ssn): SubSpectralNorm(
+      (bn): BatchNorm2d(160, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (temp_dw_conv): Conv2d(40, 40, kernel_size=(1, 3), stride=(1, 1), padding=(0, 1), groups=40, bias=False)
+    (bn1): BatchNorm2d(40, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (bn2): BatchNorm2d(40, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (relu): ReLU(inplace=True)
+    (channel_drop): Dropout2d(p=0.1, inplace=False)
+    (swish): SiLU()
+    (conv1x1_1): Conv2d(80, 40, kernel_size=(1, 1), stride=(1, 1), bias=False)
+    (conv1x1_2): Conv2d(40, 40, kernel_size=(1, 1), stride=(1, 1), bias=False)
+  )
+  (block1_2): BroadcastedBlock(
+    (freq_dw_conv): Conv2d(40, 40, kernel_size=(3, 1), stride=(1, 1), padding=(1, 0), groups=40, bias=False)
+    (ssn1): SubSpectralNorm(
+      (bn): BatchNorm2d(160, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (temp_dw_conv): Conv2d(40, 40, kernel_size=(1, 3), stride=(1, 1), padding=(0, 1), groups=40, bias=False)
+    (bn): BatchNorm2d(40, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (relu): ReLU(inplace=True)
+    (channel_drop): Dropout2d(p=0.1, inplace=False)
+    (swish): SiLU()
+    (conv1x1): Conv2d(40, 40, kernel_size=(1, 1), stride=(1, 1), bias=False)
+  )
+  (block2_1): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (block3_1): TransitionBlock(
+    (freq_dw_conv): Conv2d(60, 60, kernel_size=(3, 1), stride=(1, 1), padding=(1, 0), groups=60, bias=False)
+    (ssn): SubSpectralNorm(
+      (bn): BatchNorm2d(240, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (temp_dw_conv): Conv2d(60, 60, kernel_size=(1, 3), stride=(1, 1), padding=(0, 1), groups=60, bias=False)
+    (bn1): BatchNorm2d(60, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (bn2): BatchNorm2d(60, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (relu): ReLU(inplace=True)
+    (channel_drop): Dropout2d(p=0.1, inplace=False)
+    (swish): SiLU()
+    (conv1x1_1): Conv2d(40, 60, kernel_size=(1, 1), stride=(1, 1), bias=False)
+    (conv1x1_2): Conv2d(60, 60, kernel_size=(1, 1), stride=(1, 1), bias=False)
+  )
+  (block3_2): BroadcastedBlock(
+    (freq_dw_conv): Conv2d(60, 60, kernel_size=(3, 1), stride=(1, 1), padding=(1, 0), groups=60, bias=False)
+    (ssn1): SubSpectralNorm(
+      (bn): BatchNorm2d(240, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (temp_dw_conv): Conv2d(60, 60, kernel_size=(1, 3), stride=(1, 1), padding=(0, 1), groups=60, bias=False)
+    (bn): BatchNorm2d(60, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (relu): ReLU(inplace=True)
+    (channel_drop): Dropout2d(p=0.1, inplace=False)
+    (swish): SiLU()
+    (conv1x1): Conv2d(60, 60, kernel_size=(1, 1), stride=(1, 1), bias=False)
+  )
+  (block4_1): MaxPool2d(kernel_size=2, stride=2, padding=0, dilation=1, ceil_mode=False)
+  (block5_1): TransitionBlock(
+    (freq_dw_conv): Conv2d(80, 80, kernel_size=(3, 1), stride=(1, 1), padding=(1, 0), groups=80, bias=False)
+    (ssn): SubSpectralNorm(
+      (bn): BatchNorm2d(320, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (temp_dw_conv): Conv2d(80, 80, kernel_size=(1, 3), stride=(1, 1), padding=(0, 1), groups=80, bias=False)
+    (bn1): BatchNorm2d(80, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (bn2): BatchNorm2d(80, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (relu): ReLU(inplace=True)
+    (channel_drop): Dropout2d(p=0.1, inplace=False)
+    (swish): SiLU()
+    (conv1x1_1): Conv2d(60, 80, kernel_size=(1, 1), stride=(1, 1), bias=False)
+    (conv1x1_2): Conv2d(80, 80, kernel_size=(1, 1), stride=(1, 1), bias=False)
+  )
+  (block5_2): BroadcastedBlock(
+    (freq_dw_conv): Conv2d(80, 80, kernel_size=(3, 1), stride=(1, 1), padding=(1, 0), groups=80, bias=False)
+    (ssn1): SubSpectralNorm(
+      (bn): BatchNorm2d(320, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (temp_dw_conv): Conv2d(80, 80, kernel_size=(1, 3), stride=(1, 1), padding=(0, 1), groups=80, bias=False)
+    (bn): BatchNorm2d(80, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (relu): ReLU(inplace=True)
+    (channel_drop): Dropout2d(p=0.1, inplace=False)
+    (swish): SiLU()
+    (conv1x1): Conv2d(80, 80, kernel_size=(1, 1), stride=(1, 1), bias=False)
+  )
+  (block6_1): TransitionBlock(
+    (freq_dw_conv): Conv2d(100, 100, kernel_size=(3, 1), stride=(1, 1), padding=(1, 0), groups=100, bias=False)
+    (ssn): SubSpectralNorm(
+      (bn): BatchNorm2d(400, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (temp_dw_conv): Conv2d(100, 100, kernel_size=(1, 3), stride=(1, 1), padding=(0, 1), groups=100, bias=False)
+    (bn1): BatchNorm2d(100, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (bn2): BatchNorm2d(100, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (relu): ReLU(inplace=True)
+    (channel_drop): Dropout2d(p=0.1, inplace=False)
+    (swish): SiLU()
+    (conv1x1_1): Conv2d(80, 100, kernel_size=(1, 1), stride=(1, 1), bias=False)
+    (conv1x1_2): Conv2d(100, 100, kernel_size=(1, 1), stride=(1, 1), bias=False)
+  )
+  (block6_2): BroadcastedBlock(
+    (freq_dw_conv): Conv2d(100, 100, kernel_size=(3, 1), stride=(1, 1), padding=(1, 0), groups=100, bias=False)
+    (ssn1): SubSpectralNorm(
+      (bn): BatchNorm2d(400, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (temp_dw_conv): Conv2d(100, 100, kernel_size=(1, 3), stride=(1, 1), padding=(0, 1), groups=100, bias=False)
+    (bn): BatchNorm2d(100, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (relu): ReLU(inplace=True)
+    (channel_drop): Dropout2d(p=0.1, inplace=False)
+    (swish): SiLU()
+    (conv1x1): Conv2d(100, 100, kernel_size=(1, 1), stride=(1, 1), bias=False)
+  )
+  (block6_3): BroadcastedBlock(
+    (freq_dw_conv): Conv2d(100, 100, kernel_size=(3, 1), stride=(1, 1), padding=(1, 0), groups=100, bias=False)
+    (ssn1): SubSpectralNorm(
+      (bn): BatchNorm2d(400, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    )
+    (temp_dw_conv): Conv2d(100, 100, kernel_size=(1, 3), stride=(1, 1), padding=(0, 1), groups=100, bias=False)
+    (bn): BatchNorm2d(100, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+    (relu): ReLU(inplace=True)
+    (channel_drop): Dropout2d(p=0.1, inplace=False)
+    (swish): SiLU()
+    (conv1x1): Conv2d(100, 100, kernel_size=(1, 1), stride=(1, 1), bias=False)
+  )
+  (block7_1): Conv2d(100, 50, kernel_size=(1, 1), stride=(1, 1))
+  (block8_1): AdaptiveAvgPool2d(output_size=(1, 1))
+  (frontend): Audio_Frontend(
+    (spectrogram_extractor): Spectrogram(
+      (stft): STFT(
+        (conv_real): Conv1d(1, 513, kernel_size=(1024,), stride=(320,), bias=False)
+        (conv_imag): Conv1d(1, 513, kernel_size=(1024,), stride=(320,), bias=False)
+      )
+    )
+    (logmel_extractor): LogmelFilterBank()
+    (spec_augmenter): SpecAugmentation(
+      (time_dropper): DropStripes()
+      (freq_dropper): DropStripes()
+    )
+    (bn0): BatchNorm2d(64, eps=1e-05, momentum=0.1, affine=True, track_running_stats=True)
+  )
+)
+
+ 2023-10-01 21:14:41,356 - INFO - Exp: disjoint | batch_size: 128 | learning_rate: 0.001 | dataset: ESC-50
+ 2023-10-01 21:14:41,357 - INFO - [2-1] Prepare a datalist for the current task
+ 2023-10-01 21:14:41,397 - INFO - [Train] Get datalist from ESC-50_train_disjoint_rand5_cls50_task0_1.json
+ 2023-10-01 21:14:41,405 - INFO - [Test ] Get datalist from ESC-50_test_rand5_cls50_task0_1.json
+ 2023-10-01 21:14:41,406 - INFO - Set the test fold number 1 of the current task
+ 2023-10-01 21:14:41,407 - INFO - Apply before_task
+ 2023-10-01 21:14:41,410 - INFO - Reset the optimizer and scheduler states
+ 2023-10-01 21:14:41,411 - INFO - Increasing the head of fc [] -> 50
+ 2023-10-01 21:14:41,411 - INFO - [2-3] Start to train
+ 2023-10-01 21:14:41,415 - INFO - Streamed samples: 2000
+ 2023-10-01 21:14:41,415 - INFO - In-memory samples: 0
+ 2023-10-01 21:14:41,415 - INFO - Train samples: 2000
+ 2023-10-01 21:14:41,416 - INFO - Test samples: 400
+ 2023-10-01 21:14:55,007 - INFO - Epoch 0 | Training Loss: 3.8145147562026978
+ 2023-10-01 21:15:00,655 - INFO - Epoch 0 | Evaluation Accuracy: 0.02
+ 2023-10-01 21:15:00,655 - INFO - Best Accuracy: 0.02 in epoch 0.
+ 2023-10-01 21:15:13,001 - INFO - Epoch 1 | Training Loss: 3.3748191744089127
+ 2023-10-01 21:15:18,592 - INFO - Epoch 1 | Evaluation Accuracy: 0.03
+ 2023-10-01 21:15:18,592 - INFO - Best Accuracy: 0.03 in epoch 1.
+ 2023-10-01 21:15:31,418 - INFO - Epoch 2 | Training Loss: 3.021370053291321
+ 2023-10-01 21:15:37,186 - INFO - Epoch 2 | Evaluation Accuracy: 0.0675
+ 2023-10-01 21:15:37,187 - INFO - Best Accuracy: 0.0675 in epoch 2.
+ 2023-10-01 21:15:50,040 - INFO - Epoch 3 | Training Loss: 2.7193252444267273
+ 2023-10-01 21:15:56,195 - INFO - Epoch 3 | Evaluation Accuracy: 0.2175
+ 2023-10-01 21:15:56,195 - INFO - Best Accuracy: 0.2175 in epoch 3.
+ 2023-10-01 21:16:08,434 - INFO - Epoch 4 | Training Loss: 2.438952296972275
+ 2023-10-01 21:16:14,599 - INFO - Epoch 4 | Evaluation Accuracy: 0.3975
+ 2023-10-01 21:16:14,599 - INFO - Best Accuracy: 0.3975 in epoch 4.
+ 2023-10-01 21:16:27,248 - INFO - Epoch 5 | Training Loss: 2.1937736719846725
+ 2023-10-01 21:16:33,661 - INFO - Epoch 5 | Evaluation Accuracy: 0.49
+ 2023-10-01 21:16:33,661 - INFO - Best Accuracy: 0.49 in epoch 5.
+ 2023-10-01 21:16:45,908 - INFO - Epoch 6 | Training Loss: 2.022611290216446
+ 2023-10-01 21:16:51,848 - INFO - Epoch 6 | Evaluation Accuracy: 0.495
+ 2023-10-01 21:16:51,849 - INFO - Best Accuracy: 0.495 in epoch 6.
+ 2023-10-01 21:17:04,531 - INFO - Epoch 7 | Training Loss: 1.818730965256691
+ 2023-10-01 21:17:09,942 - INFO - Epoch 7 | Evaluation Accuracy: 0.4475
+ 2023-10-01 21:17:09,942 - INFO - EarlyStopping counter: 1 out of 15.
+ 2023-10-01 21:17:22,155 - INFO - Epoch 8 | Training Loss: 1.6728257909417152
+ 2023-10-01 21:17:27,538 - INFO - Epoch 8 | Evaluation Accuracy: 0.565
+ 2023-10-01 21:17:27,539 - INFO - Best Accuracy: 0.565 in epoch 8.
+ 2023-10-01 21:17:40,722 - INFO - Epoch 9 | Training Loss: 1.540697194635868
+ 2023-10-01 21:17:46,615 - INFO - Epoch 9 | Evaluation Accuracy: 0.4625
+ 2023-10-01 21:17:46,615 - INFO - EarlyStopping counter: 1 out of 15.
+ 2023-10-01 21:17:59,303 - INFO - Epoch 10 | Training Loss: 1.4353370293974876
+ 2023-10-01 21:18:04,462 - INFO - Epoch 10 | Evaluation Accuracy: 0.6275
+ 2023-10-01 21:18:04,463 - INFO - Best Accuracy: 0.6275 in epoch 10.
+ 2023-10-01 21:18:16,531 - INFO - Epoch 11 | Training Loss: 1.3145528882741928
+ 2023-10-01 21:18:21,950 - INFO - Epoch 11 | Evaluation Accuracy: 0.6075
+ 2023-10-01 21:18:21,950 - INFO - EarlyStopping counter: 1 out of 15.
+ 2023-10-01 21:18:34,358 - INFO - Epoch 12 | Training Loss: 1.1896071024239063
+ 2023-10-01 21:18:40,893 - INFO - Epoch 12 | Evaluation Accuracy: 0.7325
+ 2023-10-01 21:18:40,893 - INFO - Best Accuracy: 0.7325 in epoch 12.
+ 2023-10-01 21:18:53,203 - INFO - Epoch 13 | Training Loss: 1.0717023015022278
+ 2023-10-01 21:18:58,687 - INFO - Epoch 13 | Evaluation Accuracy: 0.725
+ 2023-10-01 21:18:58,688 - INFO - EarlyStopping counter: 1 out of 15.
+ 2023-10-01 21:19:11,544 - INFO - Epoch 14 | Training Loss: 1.0503795892000198
+ 2023-10-01 21:19:17,163 - INFO - Epoch 14 | Evaluation Accuracy: 0.7425
+ 2023-10-01 21:19:17,164 - INFO - Best Accuracy: 0.7425 in epoch 14.
+ 2023-10-01 21:19:30,161 - INFO - Epoch 15 | Training Loss: 0.9388885945081711
+ 2023-10-01 21:19:35,544 - INFO - Epoch 15 | Evaluation Accuracy: 0.755
+ 2023-10-01 21:19:35,544 - INFO - Best Accuracy: 0.755 in epoch 15.
+ 2023-10-01 21:19:47,954 - INFO - Epoch 16 | Training Loss: 0.8728555217385292
+ 2023-10-01 21:19:53,393 - INFO - Epoch 16 | Evaluation Accuracy: 0.8
+ 2023-10-01 21:19:53,393 - INFO - Best Accuracy: 0.8 in epoch 16.
+ 2023-10-01 21:20:05,461 - INFO - Epoch 17 | Training Loss: 0.8240498825907707
+ 2023-10-01 21:20:11,333 - INFO - Epoch 17 | Evaluation Accuracy: 0.845
+ 2023-10-01 21:20:11,333 - INFO - Best Accuracy: 0.845 in epoch 17.
+ 2023-10-01 21:20:23,391 - INFO - Epoch 18 | Training Loss: 0.7369583584368229
+ 2023-10-01 21:20:29,269 - INFO - Epoch 18 | Evaluation Accuracy: 0.8775
+ 2023-10-01 21:20:29,269 - INFO - Best Accuracy: 0.8775 in epoch 18.
+ 2023-10-01 21:20:41,589 - INFO - Epoch 19 | Training Loss: 0.6949801295995712
+ 2023-10-01 21:20:48,042 - INFO - Epoch 19 | Evaluation Accuracy: 0.8875
+ 2023-10-01 21:20:48,042 - INFO - Best Accuracy: 0.8875 in epoch 19.
+ 2023-10-01 21:20:59,959 - INFO - Epoch 20 | Training Loss: 0.6411740910261869
+ 2023-10-01 21:21:05,946 - INFO - Epoch 20 | Evaluation Accuracy: 0.8825
+ 2023-10-01 21:21:05,946 - INFO - EarlyStopping counter: 1 out of 15.
+ 2023-10-01 21:21:18,057 - INFO - Epoch 21 | Training Loss: 0.5919587649405003
+ 2023-10-01 21:21:24,435 - INFO - Epoch 21 | Evaluation Accuracy: 0.8
+ 2023-10-01 21:21:24,436 - INFO - EarlyStopping counter: 2 out of 15.
+ 2023-10-01 21:21:36,908 - INFO - Epoch 22 | Training Loss: 0.5885735750198364
+ 2023-10-01 21:21:42,640 - INFO - Epoch 22 | Evaluation Accuracy: 0.89
+ 2023-10-01 21:21:42,640 - INFO - Best Accuracy: 0.89 in epoch 22.
+ 2023-10-01 21:21:55,167 - INFO - Epoch 23 | Training Loss: 0.5366235207766294
+ 2023-10-01 21:22:00,779 - INFO - Epoch 23 | Evaluation Accuracy: 0.9375
+ 2023-10-01 21:22:00,779 - INFO - Best Accuracy: 0.9375 in epoch 23.
+ 2023-10-01 21:22:12,938 - INFO - Epoch 24 | Training Loss: 0.5022132489830256
+ 2023-10-01 21:22:18,806 - INFO - Epoch 24 | Evaluation Accuracy: 0.905
+ 2023-10-01 21:22:18,806 - INFO - EarlyStopping counter: 1 out of 15.
+ 2023-10-01 21:22:31,217 - INFO - Epoch 25 | Training Loss: 0.47784388810396194
+ 2023-10-01 21:22:37,263 - INFO - Epoch 25 | Evaluation Accuracy: 0.88
+ 2023-10-01 21:22:37,263 - INFO - EarlyStopping counter: 2 out of 15.
+ 2023-10-01 21:22:49,188 - INFO - Epoch 26 | Training Loss: 0.45078015327453613
+ 2023-10-01 21:22:55,236 - INFO - Epoch 26 | Evaluation Accuracy: 0.9275
+ 2023-10-01 21:22:55,237 - INFO - EarlyStopping counter: 3 out of 15.
+ 2023-10-01 21:23:07,989 - INFO - Epoch 27 | Training Loss: 0.40675821155309677
+ 2023-10-01 21:23:13,874 - INFO - Epoch 27 | Evaluation Accuracy: 0.9425
+ 2023-10-01 21:23:13,874 - INFO - Best Accuracy: 0.9425 in epoch 27.
+ 2023-10-01 21:23:26,034 - INFO - Epoch 28 | Training Loss: 0.3690842166543007
+ 2023-10-01 21:23:31,512 - INFO - Epoch 28 | Evaluation Accuracy: 0.955
+ 2023-10-01 21:23:31,512 - INFO - Best Accuracy: 0.955 in epoch 28.
+ 2023-10-01 21:23:43,627 - INFO - Epoch 29 | Training Loss: 0.34879355505108833
+ 2023-10-01 21:23:49,549 - INFO - Epoch 29 | Evaluation Accuracy: 0.95
+ 2023-10-01 21:23:49,549 - INFO - EarlyStopping counter: 1 out of 15.
+ 2023-10-01 21:24:02,666 - INFO - Epoch 30 | Training Loss: 0.3292665258049965
+ 2023-10-01 21:24:08,637 - INFO - Epoch 30 | Evaluation Accuracy: 0.9675
+ 2023-10-01 21:24:08,637 - INFO - Best Accuracy: 0.9675 in epoch 30.
+ 2023-10-01 21:24:20,755 - INFO - Epoch 31 | Training Loss: 0.3139646090567112
+ 2023-10-01 21:24:26,143 - INFO - Epoch 31 | Evaluation Accuracy: 0.9625
+ 2023-10-01 21:24:26,144 - INFO - EarlyStopping counter: 1 out of 15.
+ 2023-10-01 21:24:37,936 - INFO - Epoch 32 | Training Loss: 0.2849278775975108
+ 2023-10-01 21:24:43,198 - INFO - Epoch 32 | Evaluation Accuracy: 0.9775
+ 2023-10-01 21:24:43,199 - INFO - Best Accuracy: 0.9775 in epoch 32.
+ 2023-10-01 21:24:55,014 - INFO - Epoch 33 | Training Loss: 0.2629270860925317
+ 2023-10-01 21:25:00,944 - INFO - Epoch 33 | Evaluation Accuracy: 0.975
+ 2023-10-01 21:25:00,944 - INFO - EarlyStopping counter: 1 out of 15.
+ 2023-10-01 21:25:13,605 - INFO - Epoch 34 | Training Loss: 0.2642107857391238
+ 2023-10-01 21:25:19,310 - INFO - Epoch 34 | Evaluation Accuracy: 0.98
+ 2023-10-01 21:25:19,310 - INFO - Best Accuracy: 0.98 in epoch 34.
+ 2023-10-01 21:25:31,528 - INFO - Epoch 35 | Training Loss: 0.26767154969275
+ 2023-10-01 21:25:38,133 - INFO - Epoch 35 | Evaluation Accuracy: 0.96
+ 2023-10-01 21:25:38,133 - INFO - EarlyStopping counter: 1 out of 15.
+ 2023-10-01 21:25:50,337 - INFO - Epoch 36 | Training Loss: 0.2575714262202382
+ 2023-10-01 21:25:55,965 - INFO - Epoch 36 | Evaluation Accuracy: 0.975
+ 2023-10-01 21:25:55,965 - INFO - EarlyStopping counter: 2 out of 15.
+ 2023-10-01 21:26:08,007 - INFO - Epoch 37 | Training Loss: 0.22016353160142899
+ 2023-10-01 21:26:13,568 - INFO - Epoch 37 | Evaluation Accuracy: 0.965
+ 2023-10-01 21:26:13,569 - INFO - EarlyStopping counter: 3 out of 15.
+ 2023-10-01 21:26:25,490 - INFO - Epoch 38 | Training Loss: 0.22294522169977427
+ 2023-10-01 21:26:30,668 - INFO - Epoch 38 | Evaluation Accuracy: 0.975
+ 2023-10-01 21:26:30,668 - INFO - EarlyStopping counter: 4 out of 15.
+ 2023-10-01 21:26:42,817 - INFO - Epoch 39 | Training Loss: 0.20161850191652775
+ 2023-10-01 21:26:48,554 - INFO - Epoch 39 | Evaluation Accuracy: 0.985
+ 2023-10-01 21:26:48,554 - INFO - Best Accuracy: 0.985 in epoch 39.
+ 2023-10-01 21:27:00,567 - INFO - Epoch 40 | Training Loss: 0.18361589452251792
+ 2023-10-01 21:27:06,485 - INFO - Epoch 40 | Evaluation Accuracy: 0.935
+ 2023-10-01 21:27:06,486 - INFO - EarlyStopping counter: 1 out of 15.
+ 2023-10-01 21:27:19,126 - INFO - Epoch 41 | Training Loss: 0.19574167486280203
+ 2023-10-01 21:27:24,858 - INFO - Epoch 41 | Evaluation Accuracy: 0.9775
+ 2023-10-01 21:27:24,858 - INFO - EarlyStopping counter: 2 out of 15.
+ 2023-10-01 21:27:37,590 - INFO - Epoch 42 | Training Loss: 0.18612397275865078
+ 2023-10-01 21:27:43,509 - INFO - Epoch 42 | Evaluation Accuracy: 0.9975
+ 2023-10-01 21:27:43,509 - INFO - Best Accuracy: 0.9975 in epoch 42.
+ 2023-10-01 21:27:55,782 - INFO - Epoch 43 | Training Loss: 0.1525411931797862
+ 2023-10-01 21:28:01,757 - INFO - Epoch 43 | Evaluation Accuracy: 0.9675
+ 2023-10-01 21:28:01,758 - INFO - EarlyStopping counter: 1 out of 15.
+ 2023-10-01 21:28:13,939 - INFO - Epoch 44 | Training Loss: 0.18787257326766849
+ 2023-10-01 21:28:20,470 - INFO - Epoch 44 | Evaluation Accuracy: 0.98
+ 2023-10-01 21:28:20,471 - INFO - EarlyStopping counter: 2 out of 15.
+ 2023-10-01 21:28:32,816 - INFO - Epoch 45 | Training Loss: 0.1604031170718372
+ 2023-10-01 21:28:38,646 - INFO - Epoch 45 | Evaluation Accuracy: 0.9625
+ 2023-10-01 21:28:38,646 - INFO - EarlyStopping counter: 3 out of 15.
+ 2023-10-01 21:28:50,348 - INFO - Epoch 46 | Training Loss: 0.14194331038743258
+ 2023-10-01 21:28:56,350 - INFO - Epoch 46 | Evaluation Accuracy: 0.995
+ 2023-10-01 21:28:56,351 - INFO - EarlyStopping counter: 4 out of 15.
+ 2023-10-01 21:29:08,851 - INFO - Epoch 47 | Training Loss: 0.14060833863914013
+ 2023-10-01 21:29:13,986 - INFO - Epoch 47 | Evaluation Accuracy: 0.9975
+ 2023-10-01 21:29:13,986 - INFO - EarlyStopping counter: 5 out of 15.
+ 2023-10-01 21:29:26,382 - INFO - Epoch 48 | Training Loss: 0.13389681465923786
+ 2023-10-01 21:29:31,613 - INFO - Epoch 48 | Evaluation Accuracy: 0.995
+ 2023-10-01 21:29:31,613 - INFO - EarlyStopping counter: 6 out of 15.
+ 2023-10-01 21:29:43,646 - INFO - Epoch 49 | Training Loss: 0.1577655873261392
+ 2023-10-01 21:29:49,350 - INFO - Epoch 49 | Evaluation Accuracy: 0.995
+ 2023-10-01 21:29:49,351 - INFO - EarlyStopping counter: 7 out of 15.
+ 2023-10-01 21:30:02,041 - INFO - Epoch 50 | Training Loss: 0.14946307940408587
+ 2023-10-01 21:30:08,426 - INFO - Epoch 50 | Evaluation Accuracy: 0.9975
+ 2023-10-01 21:30:08,426 - INFO - EarlyStopping counter: 8 out of 15.
+ 2023-10-01 21:30:20,661 - INFO - Epoch 51 | Training Loss: 0.14086904469877481
+ 2023-10-01 21:30:26,757 - INFO - Epoch 51 | Evaluation Accuracy: 0.965
+ 2023-10-01 21:30:26,757 - INFO - EarlyStopping counter: 9 out of 15.
+ 2023-10-01 21:30:39,347 - INFO - Epoch 52 | Training Loss: 0.11202881252393126
+ 2023-10-01 21:30:45,614 - INFO - Epoch 52 | Evaluation Accuracy: 0.995
+ 2023-10-01 21:30:45,614 - INFO - EarlyStopping counter: 10 out of 15.
+ 2023-10-01 21:30:57,942 - INFO - Epoch 53 | Training Loss: 0.1278009619563818
+ 2023-10-01 21:31:03,935 - INFO - Epoch 53 | Evaluation Accuracy: 0.9925
+ 2023-10-01 21:31:03,935 - INFO - EarlyStopping counter: 11 out of 15.
+ 2023-10-01 21:31:16,580 - INFO - Epoch 54 | Training Loss: 0.109799322206527
+ 2023-10-01 21:31:22,233 - INFO - Epoch 54 | Evaluation Accuracy: 0.995
+ 2023-10-01 21:31:22,234 - INFO - EarlyStopping counter: 12 out of 15.
+ 2023-10-01 21:31:35,150 - INFO - Epoch 55 | Training Loss: 0.12272673426195979
+ 2023-10-01 21:31:41,371 - INFO - Epoch 55 | Evaluation Accuracy: 0.995
+ 2023-10-01 21:31:41,371 - INFO - EarlyStopping counter: 13 out of 15.
+ 2023-10-01 21:31:53,642 - INFO - Epoch 56 | Training Loss: 0.11424928973428905
+ 2023-10-01 21:31:59,511 - INFO - Epoch 56 | Evaluation Accuracy: 0.9925
+ 2023-10-01 21:31:59,512 - INFO - EarlyStopping counter: 14 out of 15.
+ 2023-10-01 21:32:11,773 - INFO - Epoch 57 | Training Loss: 0.09314318280667067
+ 2023-10-01 21:32:17,339 - INFO - Epoch 57 | Evaluation Accuracy: 1.0
+ 2023-10-01 21:32:17,339 - INFO - Best Accuracy: 1.0 in epoch 57.
+ 2023-10-01 21:32:29,473 - INFO - Epoch 58 | Training Loss: 0.09485935023985803
+ 2023-10-01 21:32:35,494 - INFO - Epoch 58 | Evaluation Accuracy: 0.995
+ 2023-10-01 21:32:35,494 - INFO - EarlyStopping counter: 1 out of 15.
+ 2023-10-01 21:32:48,497 - INFO - Epoch 59 | Training Loss: 0.11395179899409413
+ 2023-10-01 21:32:54,082 - INFO - Epoch 59 | Evaluation Accuracy: 0.9975
+ 2023-10-01 21:32:54,083 - INFO - EarlyStopping counter: 2 out of 15.
+ 2023-10-01 21:33:06,336 - INFO - Epoch 60 | Training Loss: 0.1008196899201721
+ 2023-10-01 21:33:11,615 - INFO - Epoch 60 | Evaluation Accuracy: 0.995
+ 2023-10-01 21:33:11,616 - INFO - EarlyStopping counter: 3 out of 15.
+ 2023-10-01 21:33:24,264 - INFO - Epoch 61 | Training Loss: 0.0858120375778526
+ 2023-10-01 21:33:30,632 - INFO - Epoch 61 | Evaluation Accuracy: 0.9975
+ 2023-10-01 21:33:30,633 - INFO - EarlyStopping counter: 4 out of 15.
+ 2023-10-01 21:33:43,681 - INFO - Epoch 62 | Training Loss: 0.07594214659184217
+ 2023-10-01 21:33:49,137 - INFO - Epoch 62 | Evaluation Accuracy: 1.0
+ 2023-10-01 21:33:49,137 - INFO - EarlyStopping counter: 5 out of 15.
+ 2023-10-01 21:34:00,904 - INFO - Epoch 63 | Training Loss: 0.0860097948461771
+ 2023-10-01 21:34:06,539 - INFO - Epoch 63 | Evaluation Accuracy: 0.99
+ 2023-10-01 21:34:06,539 - INFO - EarlyStopping counter: 6 out of 15.
+ 2023-10-01 21:34:19,043 - INFO - Epoch 64 | Training Loss: 0.08711699675768614
+ 2023-10-01 21:34:24,966 - INFO - Epoch 64 | Evaluation Accuracy: 1.0
+ 2023-10-01 21:34:24,966 - INFO - EarlyStopping counter: 7 out of 15.
+ 2023-10-01 21:34:36,906 - INFO - Epoch 65 | Training Loss: 0.07816710602492094
+ 2023-10-01 21:34:42,437 - INFO - Epoch 65 | Evaluation Accuracy: 1.0
+ 2023-10-01 21:34:42,438 - INFO - EarlyStopping counter: 8 out of 15.
+ 2023-10-01 21:34:55,250 - INFO - Epoch 66 | Training Loss: 0.07242781610693783
+ 2023-10-01 21:35:00,763 - INFO - Epoch 66 | Evaluation Accuracy: 0.9975
+ 2023-10-01 21:35:00,764 - INFO - EarlyStopping counter: 9 out of 15.
+ 2023-10-01 21:35:12,619 - INFO - Epoch 67 | Training Loss: 0.06338357529602945
+ 2023-10-01 21:35:18,665 - INFO - Epoch 67 | Evaluation Accuracy: 0.9925
+ 2023-10-01 21:35:18,666 - INFO - EarlyStopping counter: 10 out of 15.
+ 2023-10-01 21:35:31,106 - INFO - Epoch 68 | Training Loss: 0.07164401980116963
+ 2023-10-01 21:35:37,133 - INFO - Epoch 68 | Evaluation Accuracy: 0.9975
+ 2023-10-01 21:35:37,134 - INFO - EarlyStopping counter: 11 out of 15.
+ 2023-10-01 21:35:49,293 - INFO - Epoch 69 | Training Loss: 0.06901620980352163
+ 2023-10-01 21:35:56,140 - INFO - Epoch 69 | Evaluation Accuracy: 0.995
+ 2023-10-01 21:35:56,140 - INFO - EarlyStopping counter: 12 out of 15.
+ 2023-10-01 21:36:08,563 - INFO - Epoch 70 | Training Loss: 0.06533641123678535
+ 2023-10-01 21:36:14,606 - INFO - Epoch 70 | Evaluation Accuracy: 0.9925
+ 2023-10-01 21:36:14,606 - INFO - EarlyStopping counter: 13 out of 15.
+ 2023-10-01 21:36:26,705 - INFO - Epoch 71 | Training Loss: 0.0605731523828581
+ 2023-10-01 21:36:32,704 - INFO - Epoch 71 | Evaluation Accuracy: 0.9925
+ 2023-10-01 21:36:32,705 - INFO - EarlyStopping counter: 14 out of 15.
+ 2023-10-01 21:36:45,038 - INFO - Epoch 72 | Training Loss: 0.07327708788216114
+ 2023-10-01 21:36:50,818 - INFO - Epoch 72 | Evaluation Accuracy: 1.0
+ 2023-10-01 21:36:50,819 - INFO - EarlyStopping counter: 15 out of 15.
+ 2023-10-01 21:36:50,819 - INFO - [2-4] Update the information for the current task
+ 2023-10-01 21:36:50,820 - INFO - Apply after_task
+ 2023-10-01 21:36:50,820 - INFO - Update memory over 50 classes by random
+ 2023-10-01 21:36:50,821 - INFO - Memory statistic
+ 2023-10-01 21:36:50,822 - INFO - [2-5] Report task result
+ 2023-10-01 21:36:53,471 - INFO - ======== Summary =======
+ 2023-10-01 21:36:53,472 - INFO - Total time 1331.991881608963, Avg: 1331.991881608963s
+ 2023-10-01 21:36:53,472 - INFO - BWT: nan, std: nan
+ 2023-10-01 21:36:53,472 - INFO - A_last 1.0 | A_avg 1.0
+ 2023-10-01 21:36:53,473 - INFO - Update time []
