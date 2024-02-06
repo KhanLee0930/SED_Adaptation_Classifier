@@ -1,6 +1,6 @@
 name: asc
 channels:
-  - utils
+  - utilss
   - conda-forge
   - defaults
 dependencies:

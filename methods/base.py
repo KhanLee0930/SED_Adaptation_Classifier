@@ -192,7 +192,7 @@ class BaseMethod:
                 # Loss
                 loss = self.criterion(batch_output_dict, batch_target_dict)
 
-                # Backward
+                # Backwards
                 loss.backward()
                 self.optimizer.step()
                 self.optimizer.zero_grad()

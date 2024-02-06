@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="6e91066c-33dc-42fe-bfd0-eb06c4357346" name="root">
+        <fileTransfer accessType="SFTP" host="i-2.gpushare.com" port="20184" sshConfigId="68754634-367f-4e5a-a316-1df72fe8a8e0" sshConfig="root@i-2.gpushare.com:20184 password">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="0" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
