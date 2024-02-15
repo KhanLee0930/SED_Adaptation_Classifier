@@ -264,9 +264,12 @@ class BaseMethod:
 
         mem_per_cls = self.memory_size // num_class
         exemplars = _reduce_exemplar_sets(exemplars, mem_per_cls)
+        # existed old class exps
         old_exemplar_df = pd.DataFrame(exemplars)
 
+
         new_exemplar_set = []
+        # new class exps
         sample_df = pd.DataFrame(samples)
         for y in range(self.num_learning_class):
             cls_samples = []
