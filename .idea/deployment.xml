@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData" autoUpload="Always" serverName="user@skyen.raytrack.cloud:9310 password (3)" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
+  <component name="PublishConfigData" autoUpload="Always" serverName="user" remoteFilesAllowedToDisappearOnAutoupload="false" confirmBeforeUploading="false">
     <option name="confirmBeforeUploading" value="false" />
     <serverData>
       <paths name="root">
@@ -17,14 +17,7 @@
           </mappings>
         </serverdata>
       </paths>
-      <paths name="user@skyen.raytrack.cloud:9310 password (2)">
-        <serverdata>
-          <mappings>
-            <mapping deploy="/home/user/SED_Adaptation_Classifier-main" local="$PROJECT_DIR$" />
-          </mappings>
-        </serverdata>
-      </paths>
-      <paths name="user@skyen.raytrack.cloud:9310 password (3)">
+      <paths name="user@skyen.raytrack.cloud:9310 password">
         <serverdata>
           <mappings>
             <mapping deploy="/home/user/SED_Adaptation_Classifier-main" local="$PROJECT_DIR$" />

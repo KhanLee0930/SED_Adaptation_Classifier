@@ -73,6 +73,8 @@ class BaseMethod:
         self.metric_k = kwargs["metric_k"]
         self.noise_lambda = kwargs["noise_lambda"]
 
+        self.data_root = kwargs["data_root"]
+
     def set_current_dataset(self, train_datalist, test_datalist):
         random.shuffle(train_datalist)
         self.prev_streamed_list = self.streamed_list
@@ -501,6 +503,14 @@ class BaseMethod:
             logger.warning(f"Duplicated samples in memory: {num_dups}")
 
         return ret
+
+def infoNCE_loss(features,aug_features,temperature):
+  NCEs = []
+  for i in range(features.shape[0]):
+    similarity = (F.cosine_similarity(features[i].unsqueeze(0), aug_features)+1)/2
+    NCE = -torch.log(torch.exp(similarity[i]/temperature)/sum(torch.exp(similarity/temperature)))
+    NCEs.append(NCE)
+  return torch.stack(NCEs)
 
 
 class TimeMask:

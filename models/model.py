@@ -4,6 +4,7 @@ import torch.nn.functional as F
 from utils.models import init_layer
 from models.frontend import Audio_Frontend
 from models.module import ConvBlock3x3, TransitionBlock, BroadcastedBlock
+import whisper
 
 
 class Baseline_CNN(nn.Module):
@@ -172,7 +173,43 @@ class BCResNet_Mod(torch.nn.Module):
         block7_1.to(self.block7_1.weight.device)
         self.block7_1 = block7_1
         self.num_class += n
+class Audio_Encoder(nn.Module):
+    def __init__(self,model,num_class):
+        super().__init__()
+        self.num_class = num_class
+        self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+        self.whisper_model = model
+        self.fc1 = nn.Linear(in_features=1152000,out_features=1024,bias = True)
+        self.fc2 = nn.Linear(in_features=1024,out_features=self.num_class,bias = True)
+        self.softmax = nn.Softmax(dim=1)
 
+    def forward(self, audios):
+        mels = []
+        for audio in audios:
+            mel = whisper.log_mel_spectrogram(audio).to(self.device)
+            if mel.ndim == 2: mel = mel.unsqueeze(0)
+            mels.append(mel)
+    # load audio and pad/trim it to fit 30 seconds
+        mels = torch.cat(mels,dim=0).to(self.device)
+        encoded = self.whisper_model.encoder(mels)
+        encoded = encoded.view(encoded.shape[0], -1)
+        print(encoded.shape)
+        output = self.fc2(self.fc1(encoded))
+        clipwise_output = self.softmax(output)
+        output_dict = {
+            'clipwise_output': clipwise_output,
+            'embedding': encoded}
+
+        return  output_dict
+class AvgPool(nn.Module):
+    def __init__(self):
+        super(AvgPool, self).__init__()
+        self.avg_pool = nn.AdaptiveAvgPool1d(output_size=15)  # 根据输入和输出维度调整kernel_size和stride
+
+    def forward(self, x):
+        # 将输入x的形状从 (b, 1000, 256) 变为 (b, 12, 256)
+        x = self.avg_pool(x.transpose(1,2)).transpose(1,2)
+        return x
 
 if __name__ == '__main__':
     panns_params = {
@@ -187,3 +224,4 @@ if __name__ == '__main__':
     model = BCResNet_Mod(frontend=frontend)
 
     print(model(torch.randn(32, 48000)))
+

@@ -10,8 +10,12 @@ import os
 import warnings
 import pandas as pd
 
+from models.categories import ytvos_category_dict
+
 warnings.filterwarnings("ignore")
 import librosa
+import whisper
+import json
 
 logger = logging.getLogger()
 
@@ -75,11 +79,59 @@ class ESC50_Dataset(Dataset):
 
         return data_dict
 
+class ytvos_Dataset(Dataset):
+    def __init__(self, data_frame: pd.DataFrame, sr=44100, num_class=65):
+        self.data_frame = data_frame
+        self.sr = sr
+        self.num_class = num_class
+        self.data_root = '/home/user/SED_Adaptation_Classifier-main/data/ref_youtube_audio/audio'
+
+    def __len__(self):
+        return len(self.data_frame)
+
+    def __getitem__(self, index):
+        if torch.is_tensor(index):
+            index = index.tolist()
+        audio_name = self.data_frame.iloc[index]["video"]
+        audio_id = self.data_frame.iloc[index]["audio"]
+        audio_path = self.data_root + '/' + audio_name + '/' + audio_id + '.wav'
+        name = audio_name + self.data_frame.iloc[index]["exp"]
+
+        # waveform = load_audio(audio_path, self.sr)
+        waveform = whisper.load_audio(audio_path,sr = 48000)
+        waveform = whisper.pad_or_trim(waveform)
+
+        tag = self.data_frame.iloc[index]["category"]
+        target = ytvos_category_dict[self.data_frame.iloc[index]["category"]]
+        target = np.eye(self.num_class)[target]
+        data_dict = {'audio_name': name, 'waveform': waveform, 'target': target, 'tag': tag}
+
+        return data_dict
+
+
+
 class Audioset_Dataset(Dataset):
     def __init__(self, data_frame: pd.DataFrame, sr=44100, num_class=50):
         self.data_frame = data_frame
         self.sr = sr
         self.num_class = num_class
+
+    def __len__(self):
+        return len(self.data_frame)
+
+    def __getitem__(self, index):
+        if torch.is_tensor(index):
+            index = index.tolist()
+        audio_name = self.data_frame.iloc[index]["audio_name"]
+
+        waveform = load_audio(audio_name, self.sr)
+        tag = self.data_frame.iloc[index]["tag"]
+        target = self.data_frame.iloc[index]["label"]
+        target = np.eye(self.num_class)[target]
+        data_dict = {'audio_name': audio_name, 'waveform': waveform, 'target': target, 'tag': tag}
+
+        return data_dict
+
 
     def __len__(self):
         return len(self.data_frame)
@@ -138,19 +190,26 @@ def get_train_datalist(args, cur_iter: int) -> List:
         datalist = pd.read_json(os.path.join(args.data_root, f"{collection_name}.json")
                                 ).to_dict(orient="records")
         logger.info(f"[Train] Get datalist from {collection_name}.json")
+    elif args.dataset == "ref_youtube_audio":
+        task_id = cur_iter
+        task_metas = []
+        data_root = args.data_root
+        with open(data_root +'/json_file/'+ 'metas.json', 'r') as f:
+            # metas is the list
+            metas = json.load(f)['metas']
+        with open(data_root + '/json_file/'+'task{}.json'.format(task_id), 'r') as f:
+            tasks = json.load(f)[str(task_id)]
+
+
+        for category,task_metas_dict in tasks.items():
+            train_ids = task_metas_dict['train']
+            for train_id in train_ids:
+                task_metas.append(metas[train_id])
+
+
+        datalist = task_metas
     else:
         raise NotImplementedError
-        collection_name = get_train_collection_name(
-            dataset=args.dataset,
-            exp=args.exp_name,
-            rnd=args.rnd_seed,
-            n_cls=args.n_cls_a_task,
-            iter=cur_iter,
-        )
-
-        datalist = pd.read_json(os.path.join(args.data_root, f"{collection_name}.json")
-                                ).to_dict(orient="records")
-        logger.info(f"[Train] Get datalist from {collection_name}.json")
 
     return datalist
 
@@ -196,6 +255,22 @@ def get_test_datalist(args, exp_name: str, cur_iter: int) -> List:
                 os.path.join(args.data_root, f"{collection_name}.json")
             ).to_dict(orient="records")
             logger.info(f"[Test ] Get datalist from {collection_name}.json")
+
+    elif args.dataset == "ref_youtube_audio":
+        task_id = cur_iter
+        task_metas = []
+        data_root = args.data_root
+        with open(data_root +'/json_file/'+ 'metas.json', 'r') as f:
+            # metas is the list
+            metas = json.load(f)['metas']
+        for iter_ in tasks:
+            with open(data_root + '/json_file/'+'task{}.json'.format(iter_), 'r') as f:
+                tasks = json.load(f)[str(iter_)]
+            for category,task_metas_dict in tasks.items():
+                train_ids = task_metas_dict['test']
+                for train_id in train_ids:
+                    task_metas.append(metas[train_id])
+        datalist = task_metas
     else:
         raise NotImplementedError
 
@@ -207,6 +282,8 @@ def get_dataloader(data_frame, dataset, split, batch_size, num_class, num_worker
         dataset = Audioset_Dataset(data_frame=data_frame, num_class=num_class)
     elif dataset == "ESC-50":
         dataset = ESC50_Dataset(data_frame=data_frame)
+    elif dataset == "ref_youtube_audio":
+        dataset = ytvos_Dataset(data_frame=data_frame)
     else:
         raise NotImplementedError
     is_train = True if split == 'train' else False

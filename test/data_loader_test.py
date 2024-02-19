@@ -10,6 +10,8 @@ import os
 import warnings
 import pandas as pd
 
+from data_loader import ytvos_Dataset
+
 warnings.filterwarnings("ignore")
 import librosa
 
@@ -138,6 +140,29 @@ def get_train_datalist(args, cur_iter: int) -> List:
         datalist = pd.read_json(os.path.join(args.data_root, f"{collection_name}.json")
                                 ).to_dict(orient="records")
         logger.info(f"[Train] Get datalist from {collection_name}.json")
+    elif args.dataset == "ref_youtube_audio":
+        task_id = cur_iter
+        task_metas = []
+        data_root = args.data_root
+        with open(data_root + 'metas.json', 'r') as f:
+            # metas is the list
+            metas = json.load(f)['metas']
+        with open(ROOT + 'task{}.json'.format(task_id), 'r') as f:
+            tasks = json.load(f)[str(task_id)]
+
+        numbers = []
+        for category in tasks:
+            number = 0
+            exps = tasks[category]
+            for exp in exps:
+                number += 1
+                ids = tasks[category][exp]
+                for id in ids:
+                    task_metas.append(metas[id])
+            numbers.append(number)
+
+        return metas, task_metas, list(tasks.keys()), numbers
+
     else:
         raise NotImplementedError
         collection_name = get_train_collection_name(
@@ -153,6 +178,8 @@ def get_train_datalist(args, cur_iter: int) -> List:
         logger.info(f"[Train] Get datalist from {collection_name}.json")
 
     return datalist
+
+
 
 
 def get_train_collection_name(dataset, exp, rnd, n_cls, iter):
@@ -207,6 +234,8 @@ def get_dataloader(data_frame, dataset, split, batch_size, num_class, num_worker
         dataset = Audioset_Dataset(data_frame=data_frame, num_class=num_class)
     elif dataset == "ESC-50":
         dataset = ESC50_Dataset(data_frame=data_frame)
+    elif dataset == "ref_youtube_audio":
+        dataset = ytvos_Dataset(data_frame=data_frame)
     else:
         raise NotImplementedError
     is_train = True if split == 'train' else False
